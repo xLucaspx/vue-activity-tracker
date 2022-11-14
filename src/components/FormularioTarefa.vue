@@ -6,27 +6,7 @@
             </div>
 
             <div class="column">
-                <div class="is-flex is-align-items-center is-justify-content-space-between">
-                    <section>
-                        <strong>
-                            {{ tempoDecorrido }}
-                        </strong>
-                    </section>
-
-                    <button class="button" @click="iniciar">
-                        <span class="icon">
-                            <i class="fas fa-play"></i>
-                        </span>
-                        <span>Start</span>
-                    </button>
-
-                    <button class="button" @click="finalizar">
-                        <span class="icon">
-                            <i class="fas fa-stop"></i>
-                        </span>
-                        <span>Stop</span>
-                    </button>
-                </div>
+                <TemporizadorTarefa />
             </div>
         </div>
     </div>
@@ -34,31 +14,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import TemporizadorTarefa from './TemporizadorTarefa.vue';
 
 export default defineComponent({
     name: 'FormularioTarefa',
-    data() {
-        return {
-            tempoEmSegundos: 0
-        }
-    },
-    computed: {
-        tempoDecorrido () : string {
-            // formato '00:00:00'
-            return new Date(this.tempoEmSegundos * 1000).toISOString().substring(11, 19)
-        }
-    },
-    methods: {
-        iniciar() {
-            // começar a contagem
-            // 1s = 1000ms
-            setInterval(() => {
-                this.tempoEmSegundos++;
-            }, 1000)
-        },
-        finalizar() {
-            console.log("Não estou curtindo o vue cara")
-        }
+    components: {
+        TemporizadorTarefa
     }
 })
 </script>
