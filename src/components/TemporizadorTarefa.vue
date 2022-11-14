@@ -1,32 +1,24 @@
 <template>
-    <div class="is-flex is-align-items-center is-justify-content-space-between">
+    <section class="is-flex is-align-items-center is-justify-content-space-between">
         <CronometroTarefa :tempoEmSegundos="tempoEmSegundos" />
 
-        <button class="button" @click="iniciar" :disabled="rodando">
-            <span class="icon">
-                <i class="fas fa-play"></i>
-            </span>
-            <span>Start</span>
-        </button>
-
-        <button class="button" @click="finalizar" :disabled="!rodando">
-            <span class="icon">
-                <i class="fas fa-stop"></i>
-            </span>
-            <span>Stop</span>
-        </button>
-    </div>
+        <BotaoTemporizador @clicked="iniciar" icon="fas fa-play" buttonText="Play" :disabled="rodando" />
+        <BotaoTemporizador @clicked="finalizar" icon="fas fa-stop" buttonText="Stop" :disabled="!rodando" />
+    </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import BotaoTemporizador from './BotaoTemporizador.vue';
 import CronometroTarefa from './CronometroTarefa.vue';
 
 export default defineComponent({
     name: 'TemporizadorTarefa',
+    emits: ['aoTemporizadorFinalizado'],
     components: {
-        CronometroTarefa
-    },
+    CronometroTarefa,
+    BotaoTemporizador
+},
     data() {
         return {
             tempoEmSegundos: 0,
@@ -46,7 +38,9 @@ export default defineComponent({
         },
         finalizar() {
             this.rodando = false;
-            clearInterval(this.cronometro)
+            clearInterval(this.cronometro);
+            this.$emit('aoTemporizadorFinalizado', this.tempoEmSegundos);
+            this.tempoEmSegundos = 0;
         }
     }
 })

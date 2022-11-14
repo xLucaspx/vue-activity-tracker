@@ -25,3 +25,9 @@ export default defineComponent({
     },
 })
 </script>
+
+<style>
+.lista {
+    padding: 1.25rem;
+}
+</style>
