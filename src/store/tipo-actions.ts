@@ -1,0 +1,11 @@
+// Tarefas:
+export const CRIA_TAREFA = 'CRIA_TAREFA';
+export const BUSCA_TAREFAS = 'BUSCA_TAREFAS';
+export const ATUALIZA_TAREFA = 'ATUALIZA_TAREFA';
+export const DELETA_TAREFA = 'DELETA_PROJETO';
+
+// Projetos:
+export const CRIA_PROJETO = 'CRIA_PROJETO';
+export const BUSCA_PROJETOS = 'BUSCA_PROJETOS';
+export const ATUALIZA_PROJETO = 'ATUALIZA_PROJETO';
+export const DELETA_PROJETO = 'DELETA_PROJETO';

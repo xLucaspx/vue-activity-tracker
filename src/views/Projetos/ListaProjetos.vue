@@ -41,17 +41,18 @@
 import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { computed } from '@vue/reactivity';
-import { EXCLUI_PROJETO } from '@/store/tipo-mutacoes';
+import { BUSCA_PROJETOS, DELETA_PROJETO } from '@/store/tipo-actions';
 
 export default defineComponent({
     name: 'ListaProjetos',
     methods: {
         excluiProjeto (id: string) {
-            this.store.commit(EXCLUI_PROJETO, id)
+            this.store.dispatch(DELETA_PROJETO, id)
         }
     },
     setup() {
         const store = useStore()
+        store.dispatch(BUSCA_PROJETOS)
         return {
             projetos: computed(() => store.state.projetos),
             store

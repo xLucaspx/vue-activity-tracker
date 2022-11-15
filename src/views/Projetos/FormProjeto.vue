@@ -15,9 +15,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useStore } from '@/store';
-import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutacoes';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
 import useNotificador from '@/hooks/notificador'
+import { CRIA_PROJETO, ATUALIZA_PROJETO } from '@/store/tipo-actions';
 
 export default defineComponent({
     name: 'FormProjeto',
@@ -41,17 +41,21 @@ export default defineComponent({
         salvaProjeto() {
             if (this.id) {
                 // Edição
-                this.store.commit(ALTERA_PROJETO, {
+                this.store.dispatch(ATUALIZA_PROJETO, {
                     id: this.id,
                     nome: this.nomeDoProjeto
-                })
+                }).then(() => this.lidaComSucesso())
             } else {
                 // Adição
-                this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
+                this.store.dispatch(CRIA_PROJETO, this.nomeDoProjeto)
+                    .then(() => this.lidaComSucesso())
             }
-            this.notificar(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!')
-            this.nomeDoProjeto = '';
-            this.$router.push('/projetos');
+        },
+
+        lidaComSucesso() {
+            this.notificar(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!') // notifica
+            this.nomeDoProjeto = ''; // limpa o input
+            this.$router.push('/projetos'); // volta para a lista de projetos
         }
     },
     setup() {

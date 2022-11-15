@@ -4,7 +4,9 @@ import ITarefa from "@/interfaces/ITarefa";
 import { InjectionKey } from "vue";
 import { createStore, Store } from "vuex";
 import { useStore as vuexUseStore } from "vuex";
-import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ALTERA_TAREFA, EXCLUI_PROJETO, EXCLUI_TAREFA, NOTIFICA } from "./tipo-mutacoes";
+import { ATUALIZA_PROJETO, ATUALIZA_TAREFA, BUSCA_PROJETOS, BUSCA_TAREFAS, CRIA_PROJETO, CRIA_TAREFA, DELETA_PROJETO } from "./tipo-actions";
+import { ADICIONA_PROJETO, ADICIONA_TAREFA, ALTERA_PROJETO, ALTERA_TAREFA, DEFINE_PROJETOS, DEFINE_TAREFAS, EXCLUI_PROJETO, EXCLUI_TAREFA, NOTIFICA } from "./tipo-mutacoes";
+import http from "@/http"
 
 interface Estado {
     tarefas: ITarefa[],
@@ -23,8 +25,11 @@ export const store = createStore<Estado>({
     mutations: {
         // Tarefas:
         [ADICIONA_TAREFA](state, tarefa: ITarefa) {
-            tarefa.id = new Date().toISOString();
             state.tarefas.push(tarefa);
+        },
+
+        [DEFINE_TAREFAS](state, tarefas: ITarefa[]) {
+            state.tarefas = tarefas
         },
 
         [ALTERA_TAREFA](state, tarefa: ITarefa) {
@@ -55,6 +60,10 @@ export const store = createStore<Estado>({
             state.projetos = state.projetos.filter(proj => proj.id != id)
         },
 
+        [DEFINE_PROJETOS](state, projetos: IProjeto[]) {
+            state.projetos = projetos
+        },
+
         // Notificações:
         [NOTIFICA](state, novaNotificacao: INotificacao) {
             novaNotificacao.id = new Date().getTime();
@@ -63,6 +72,43 @@ export const store = createStore<Estado>({
             setTimeout(() => {
                 state.notificacoes = state.notificacoes.filter(n => n.id != novaNotificacao.id);
             }, 3000)
+        }
+    },
+    actions: {
+        [CRIA_TAREFA]({ commit }, tarefa: ITarefa) {
+            return http.post('/tarefas', tarefa)
+                .then(response => commit(ADICIONA_TAREFA, response.data))
+        },
+
+        [BUSCA_TAREFAS]({ commit }) {
+            http.get('tarefas')
+                .then(response => commit(DEFINE_TAREFAS, response.data))
+        },
+
+        [ATUALIZA_TAREFA]({ commit }, tarefa: ITarefa) {
+            return http.put(`/tarefas/${tarefa.id}`, tarefa)
+                .then(() => commit(ALTERA_TAREFA, tarefa))
+        },
+
+        // Projetos:
+        [CRIA_PROJETO](contexto, nomeDoProjeto: string) {
+            return http.post('/projetos', {
+                nome: nomeDoProjeto
+            })
+        },
+
+        [BUSCA_PROJETOS]({ commit }) {
+            http.get('projetos')
+                .then(resposta => commit(DEFINE_PROJETOS, resposta.data))
+        },
+
+        [ATUALIZA_PROJETO](contexto, projeto: IProjeto) {
+            return http.put(`/projetos/${projeto.id}`, projeto)
+        },
+
+        [DELETA_PROJETO]({ commit }, idProjeto: string) {
+            return http.delete(`/projetos/${idProjeto}`)
+                .then(() => commit(EXCLUI_PROJETO, idProjeto))
         }
     }
 })
