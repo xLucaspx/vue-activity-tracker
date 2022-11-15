@@ -37,8 +37,14 @@ export const tarefa: Module<EstadoDaTarefa, Estado> = {
                 .then(response => commit(ADICIONA_TAREFA, response.data))
         },
 
-        [BUSCA_TAREFAS]({ commit }) {
-            http.get('tarefas')
+        [BUSCA_TAREFAS]({ commit }, filtro: string) {
+            let url = 'tarefas';
+
+            if (filtro) {
+                url += '?descricao=' + filtro
+            }
+
+            http.get(url)
                 .then(response => commit(DEFINE_TAREFAS, response.data))
         },
 

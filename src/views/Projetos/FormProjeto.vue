@@ -13,11 +13,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useStore } from '@/store';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
 import useNotificador from '@/hooks/notificador'
 import { CRIA_PROJETO, ATUALIZA_PROJETO } from '@/store/tipo-actions';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     name: 'FormProjeto',
@@ -26,44 +27,40 @@ export default defineComponent({
             type: String
         }
     },
-    mounted() {
-        if (this.id) {
-            const projeto = this.store.state.projeto.projetos.find(proj => proj.id == this.id);
-            this.nomeDoProjeto = projeto?.nome || ''
+    setup(props) {
+        const store = useStore()
+        const { notifica } = useNotificador() // hook
+        const nomeDoProjeto = ref("")
+        const router = useRouter() // Atenção: useRouter != useRoute
+
+        if (props.id) {
+            const projeto = store.state.projeto.projetos.find(proj => proj.id == props.id);
+            nomeDoProjeto.value = projeto?.nome || ''
         }
-    },
-    data() {
-        return {
-            nomeDoProjeto: ""
-        }
-    },
-    methods: {
-        salvaProjeto() {
-            if (this.id) {
+
+        const salvaProjeto = () => {
+            if (props.id) {
                 // Edição
-                this.store.dispatch(ATUALIZA_PROJETO, {
-                    id: this.id,
-                    nome: this.nomeDoProjeto
-                }).then(() => this.lidaComSucesso())
+                store.dispatch(ATUALIZA_PROJETO, {
+                    id: props.id,
+                    nome: nomeDoProjeto.value
+                }).then(() => lidaComSucesso())
             } else {
                 // Adição
-                this.store.dispatch(CRIA_PROJETO, this.nomeDoProjeto)
-                    .then(() => this.lidaComSucesso())
+                store.dispatch(CRIA_PROJETO, nomeDoProjeto.value)
+                    .then(() => lidaComSucesso())
             }
-        },
-
-        lidaComSucesso() {
-            this.notificar(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!') // notifica
-            this.nomeDoProjeto = ''; // limpa o input
-            this.$router.push('/projetos'); // volta para a lista de projetos
         }
-    },
-    setup() {
-        const store = useStore()
-        const { notificar } = useNotificador()
+
+        const lidaComSucesso = () => {
+            notifica(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!') // notifica
+            nomeDoProjeto.value = ''; // limpa o input
+            router.push('/projetos'); // volta para a lista de projetos
+        }
+
         return {
-            store,
-            notificar // Usando hooks personalizados
+            nomeDoProjeto,
+            salvaProjeto
         }
     }
 })

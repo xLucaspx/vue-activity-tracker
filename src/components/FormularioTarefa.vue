@@ -24,10 +24,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import TemporizadorTarefa from './TemporizadorTarefa.vue';
 import { computed } from '@vue/reactivity';
 import { useStore } from '@/store';
+import useNotificador from '@/hooks/notificador'
 import { TipoNotificacao } from '@/interfaces/INotificacao';
 import { notificaMixin } from '@/mixins/notifica';
 
@@ -37,37 +38,40 @@ export default defineComponent({
     components: {
         TemporizadorTarefa
     },
-    data() {
-        return {
-            descricao: '',
-            idProjeto: ''
-        }
-    },
-    methods: {
-        finalizarTarefa(tempoDecorrido: number): void {
-            const projeto = this.projetos.find((p) => p.id == this.idProjeto)
+    mixins: [notificaMixin], // usando mixins
+    setup(props, { emit }) {
+        const store = useStore()
+        const projetos = computed(() => store.state.projeto.projetos)
+
+        const { notifica } = useNotificador()
+
+        const descricao = ref("")
+        const idProjeto = ref("")
+
+        const finalizarTarefa = (tempoDecorrido: number): void => {
+            const projeto = projetos.value.find((p) => p.id == idProjeto.value)
+
             // Se o projeto não existe:
             if (!projeto) {
-                this.notifica(TipoNotificacao.FALHA, 'Erro!', 'É necessário selecionar um projeto antes de finalizar a tarefa!');
+                notifica(TipoNotificacao.FALHA, 'Erro!', 'É necessário selecionar um projeto antes de finalizar a tarefa!');
                 return; // early return
             }
 
             // Se o projeto existe:
-            this.$emit('aoSalvarTarefa', {
+            emit('aoSalvarTarefa', {
                 duracaoEmSegundos: tempoDecorrido,
-                descricao: this.descricao,
+                descricao: descricao.value,
                 projeto: projeto
             });
 
-            this.descricao = "";
+            descricao.value = "";
         }
-    },
-    mixins: [notificaMixin], // usando mixins
-    setup() {
-        const store = useStore()
+
         return {
-            projetos: computed(() => store.state.projeto.projetos),
-            store
+            projetos,
+            descricao,
+            idProjeto,
+            finalizarTarefa
         }
     }
 })

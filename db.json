@@ -2,7 +2,7 @@
   "projetos": [
     {
       "id": 1,
-      "nome": "Alura Tracker"
+      "nome": "Estudar Node.js"
     },
     {
       "nome": "Estudar Vue.js",
@@ -11,13 +11,17 @@
     {
       "nome": "Desafio +a ",
       "id": 5
+    },
+    {
+      "id": 6,
+      "nome": "Estudar padrões de projetos"
     }
   ],
   "tarefas": [
     {
       "id": 1,
       "duracaoEmSegundos": 120,
-      "descricao": "Refatoração da store",
+      "descricao": "Refatorar componentes",
       "projeto": {
         "id": 1,
         "nome": "Alura Tracker"
@@ -26,7 +30,7 @@
     {
       "id": 2,
       "duracaoEmSegundos": 7200,
-      "descricao": "Iniciar projeto",
+      "descricao": "Começar projeto",
       "projeto": {
         "id": 5,
         "nome": "Desafio +a"
@@ -40,6 +44,33 @@
         "nome": "ByteBank 2.0"
       },
       "id": 3
+    },
+    {
+      "duracaoEmSegundos": 7,
+      "descricao": "Utilizar Compositions API",
+      "projeto": {
+        "nome": "Desafio +a ",
+        "id": 5
+      },
+      "id": 4
+    },
+    {
+      "duracaoEmSegundos": 2,
+      "descricao": "Utilizar Compositions API",
+      "projeto": {
+        "id": 6,
+        "nome": "Estudar padrões de projetos"
+      },
+      "id": 5
+    },
+    {
+      "duracaoEmSegundos": 3,
+      "descricao": "Assistir aulas sobre Vue",
+      "projeto": {
+        "nome": "Estudar Vue.js",
+        "id": 4
+      },
+      "id": 6
     }
   ]
 }

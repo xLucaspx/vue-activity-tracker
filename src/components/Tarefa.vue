@@ -1,11 +1,11 @@
 <template>
     <BoxTarefa>
         <div class="columns clicavel" @click="tarefaClicada">
-            <div class="column is-4">
+            <div class="column is-5">
                 {{ tarefa.descricao || 'Tarefa sem descrição' }}
             </div>
 
-            <div class="column is-3">
+            <div class="column is-5">
                 {{ tarefa.projeto?.nome || 'S/P' }}
             </div>
 
@@ -24,7 +24,6 @@ import ITarefa from '@/interfaces/ITarefa';
 
 export default defineComponent({
     name: 'TarefaVue',
-    emits: ['aoClicarTarefa'],
     components: {
         CronometroTarefa,
         BoxTarefa
@@ -35,9 +34,15 @@ export default defineComponent({
             required: true
         }
     },
-    methods: {
-        tarefaClicada(): void {
-            this.$emit('aoClicarTarefa', this.tarefa)
+    emits: ['aoClicarTarefa'],
+    setup(props, {emit}) {
+
+        const tarefaClicada = (): void => {
+            emit('aoClicarTarefa', props.tarefa)
+        }
+
+        return {
+            tarefaClicada
         }
     }
 })
