@@ -31,25 +31,27 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import IProjeto from '../interfaces/IProjeto'
+import { useStore } from '@/store';
+import { computed } from '@vue/reactivity';
 
 export default defineComponent({
     name: 'ProjetosView',
     data() {
         return {
-            nomeDoProjeto: "",
-            projetos: [] as IProjeto[]
+            nomeDoProjeto: ""
         }
     },
     methods: {
         salvaProjeto() {
-            const projeto: IProjeto = {
-                nome: this.nomeDoProjeto,
-                id: new Date().toISOString()
-            }
-
-            this.projetos.push(projeto);
+            this.store.commit('ADICIONA_PROJETO', this.nomeDoProjeto)
             this.nomeDoProjeto = '';
+        }
+    },
+    setup () {
+        const store = useStore()
+        return {
+            store,
+            projetos: computed(() => store.state.projetos)
         }
     }
 })
