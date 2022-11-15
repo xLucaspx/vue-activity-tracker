@@ -18,28 +18,24 @@
             Você ainda não realizou nenhuma tarefa!
         </BoxTarefa>
 
-        <!-- v-if para pegar a descrição somente se uma tarefa for selecionada (v-model abaixo) -->
-        <div class="modal" :class="{ 'is-active': tarefaSelecionada }" v-if="tarefaSelecionada">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Janela de edição de tarefa</p>
-                    <button class="delete" aria-label="close" @click="fechaModal"></button>
-                </header>
+        <ModalEdicao :mostra="tarefaSelecionada != null" v-if="tarefaSelecionada">
+            <template v-slot:header>
+                <p class="modal-card-title" id="modalHeader">Edição de tarefa</p>
+                <button class="delete" aria-label="close" @click="fechaModal"></button>
+            </template>
 
-                <section class="modal-card-body">
-                    <div class="field">
-                        <label for="descricaoDaTarefa" class="label">Descrição</label>
-                        <input type="text" class="input" id="descricaoDaTarefa" v-model="tarefaSelecionada.descricao">
-                    </div>
-                </section>
+            <template v-slot:tbody>
+                <div class="field">
+                    <label for="descricaoDaTarefa" class="label">Descrição</label>
+                    <input type="text" class="input" id="descricaoDaTarefa" v-model="tarefaSelecionada.descricao">
+                </div>
+            </template>
 
-                <footer class="modal-card-foot">
-                    <button class="button is-success" @click="atualizaTarefa">Salvar alterações</button>
-                    <button class="button" @click="fechaModal">Cancelar</button>
-                </footer>
-            </div>
-        </div>
+            <template v-slot:footer>
+                <button class="button is-success" @click="atualizaTarefa">Salvar alterações</button>
+                <button class="button" @click="fechaModal">Cancelar</button>
+            </template>
+        </ModalEdicao>
     </div>
 </template>
   
@@ -50,6 +46,7 @@ import { computed } from '@vue/reactivity';
 import { defineComponent, ref, watchEffect } from 'vue';
 import BoxTarefa from '../components/BoxTarefa.vue';
 import FormularioTarefa from '../components/FormularioTarefa.vue'
+import ModalEdicao from '@/components/ModalEdicao.vue';
 import TarefaVue from '../components/Tarefa.vue';
 import ITarefa from '../interfaces/ITarefa';
 import { notificaMixin } from '@/mixins/notifica';
@@ -60,7 +57,8 @@ export default defineComponent({
     components: {
         FormularioTarefa,
         TarefaVue,
-        BoxTarefa
+        BoxTarefa,
+        ModalEdicao
     },
     data() {
         return {
@@ -126,6 +124,10 @@ export default defineComponent({
 
 .lista .display {
     color: #4a4a4a;
+}
+
+#modalHeader {
+    margin-bottom: 0;
 }
 </style>
   

@@ -4,9 +4,10 @@ const projeto = {
 }
 
 const proxy = new Proxy(projeto, {
-    get(objOriginal, key) {
+    get(objOriginal, key, receiver) {
         console.log(`Algúem pediu a chave ${key} do projeto`);
-        return objOriginal[key]
+        // return objOriginal[key]
+        return Reflect.get(objOriginal, key, receiver)
     },
 
     set(objOriginal, key, value) {
