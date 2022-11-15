@@ -4,6 +4,8 @@
       <BarraLateral @aoTemaAlterado="alteraTema" />
     </div>
     <div class="column is-three-quarter content">
+      <NotificacoesVue></NotificacoesVue>
+
       <!-- Visualização de acordo com a URL -->
       <RouterView></RouterView>
     </div>
@@ -13,11 +15,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import BarraLateral from './components/BarraLateral.vue';
+import NotificacoesVue from './components/Notificacoes.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    BarraLateral
+    BarraLateral,
+    NotificacoesVue
   },
   data() {
     return {

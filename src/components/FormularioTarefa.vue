@@ -28,6 +28,8 @@ import { defineComponent } from 'vue';
 import TemporizadorTarefa from './TemporizadorTarefa.vue';
 import { computed } from '@vue/reactivity';
 import { useStore } from '@/store';
+import { NOTIFICA } from '@/store/tipo-mutacoes';
+import { TipoNotificacao } from '@/interfaces/INotificacao';
 
 export default defineComponent({
     name: 'FormularioTarefa',
@@ -43,18 +45,32 @@ export default defineComponent({
     },
     methods: {
         finalizarTarefa(tempoDecorrido: number): void {
+            const projeto = this.projetos.find((p) => p.id == this.idProjeto)
+            // Se o projeto não existe:
+            if (!projeto) {
+                this.store.commit(NOTIFICA, {
+                    tipo: TipoNotificacao.FALHA,
+                    titulo: 'Erro!',
+                    texto: 'É necessário selecionar um projeto antes de finalizar a tarefa!',
+                });
+                return; // early return
+            }
+
+            // Se o projeto existe:
             this.$emit('aoSalvarTarefa', {
                 duracaoEmSegundos: tempoDecorrido,
                 descricao: this.descricao,
-                projeto: this.projetos.find(proj => proj.id == this.idProjeto)
+                projeto: projeto
             });
+
             this.descricao = "";
         }
     },
     setup() {
         const store = useStore()
         return {
-            projetos: computed(() => store.state.projetos)
+            projetos: computed(() => store.state.projetos),
+            store
         }
     }
 })

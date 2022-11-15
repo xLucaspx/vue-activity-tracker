@@ -2,7 +2,7 @@
     <FormularioTarefa @aoSalvarTarefa="salvaTarefa" />
 
     <div class="lista">
-        <TarefaVue v-for="(tarefa, index) in tarefas" :key="index" :tarefa="tarefa" />
+        <TarefaVue v-for="tarefa in tarefas" :key="tarefa.id" :tarefa="tarefa" />
         <!-- v-for: primeiro o item, depois o índice -->
 
         <BoxTarefa v-if="listaEstaVazia">
@@ -12,6 +12,9 @@
 </template>
   
 <script lang="ts">
+import { useStore } from '@/store';
+import { ADICIONA_TAREFA } from '@/store/tipo-mutacoes';
+import { computed } from '@vue/reactivity';
 import { defineComponent } from 'vue';
 import BoxTarefa from '../components/BoxTarefa.vue';
 import FormularioTarefa from '../components/FormularioTarefa.vue'
@@ -25,9 +28,11 @@ export default defineComponent({
         TarefaVue,
         BoxTarefa
     },
-    data() {
+    setup() {
+        const store = useStore()
         return {
-            tarefas: [] as ITarefa[],
+            tarefas: computed(() => store.state.tarefas),
+            store
         }
     },
     computed: {
@@ -37,7 +42,7 @@ export default defineComponent({
     },
     methods: {
         salvaTarefa(tarefa: ITarefa) {
-            this.tarefas.push(tarefa)
+            this.store.commit(ADICIONA_TAREFA, tarefa)
         }
     }
 });
@@ -46,6 +51,10 @@ export default defineComponent({
 <style>
 .lista {
     padding: 1.25rem;
+}
+
+.lista .display {
+    color: black;
 }
 </style>
   
