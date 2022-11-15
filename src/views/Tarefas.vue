@@ -63,7 +63,7 @@ export default defineComponent({
         store.dispatch(BUSCA_TAREFAS)
         store.dispatch(BUSCA_PROJETOS)
         return {
-            tarefas: computed(() => store.state.tarefas),
+            tarefas: computed(() => store.state.tarefa.tarefas),
             store
         }
     },
