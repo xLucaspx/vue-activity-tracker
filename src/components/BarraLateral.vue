@@ -6,6 +6,22 @@
         <button class="button" @click="alteraTema">
             {{ alteraTextoBotao }}
         </button>
+        <nav class="panel mt-5">
+            <ul>
+                <li>
+                    <RouterLink to="/" class="link">
+                        <i class="fas fa-tasks"></i>
+                        Tarefas
+                    </RouterLink>
+                </li>
+                <li>
+                    <RouterLink to="/projetos" class="link">
+                        <i class="fas fa-project-diagram"></i>
+                        Projetos
+                    </RouterLink>
+                </li>
+            </ul>
+        </nav>
     </header>
 </template>
 
@@ -45,6 +61,22 @@ header {
     height: 100vh;
     padding: 1rem;
     text-align: center;
+}
+
+.panel li {
+    margin: 8px 0;
+}
+
+.link {
+    color: #fff;
+}
+
+.link:hover {
+    color: #faf0ca;
+}
+
+.link.router-link-active {
+    color: #faf0ca
 }
 
 @media only screen and (max-width: 768px) {
