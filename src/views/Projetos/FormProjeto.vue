@@ -17,7 +17,7 @@ import { defineComponent } from 'vue';
 import { useStore } from '@/store';
 import { ADICIONA_PROJETO, ALTERA_PROJETO } from '@/store/tipo-mutacoes';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
-import { notificaMixin } from '@/mixins/notifica'
+import useNotificador from '@/hooks/notificador'
 
 export default defineComponent({
     name: 'FormProjeto',
@@ -49,16 +49,17 @@ export default defineComponent({
                 // Adição
                 this.store.commit(ADICIONA_PROJETO, this.nomeDoProjeto)
             }
-            this.notifica(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!')
+            this.notificar(TipoNotificacao.SUCESSO, 'Sucesso!', 'Seu projeto foi salvo!')
             this.nomeDoProjeto = '';
             this.$router.push('/projetos');
         }
     },
-    mixins: [notificaMixin],
     setup() {
         const store = useStore()
+        const { notificar } = useNotificador()
         return {
-            store
+            store,
+            notificar // Usando hooks personalizados
         }
     }
 })

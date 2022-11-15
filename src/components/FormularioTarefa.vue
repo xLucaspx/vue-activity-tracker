@@ -62,7 +62,7 @@ export default defineComponent({
             this.descricao = "";
         }
     },
-    mixins: [notificaMixin],
+    mixins: [notificaMixin], // usando mixins
     setup() {
         const store = useStore()
         return {
