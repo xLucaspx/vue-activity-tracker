@@ -16,17 +16,17 @@ export default defineComponent({
     name: 'TemporizadorTarefa',
     emits: ['aoTemporizadorFinalizado'],
     components: {
-    CronometroTarefa,
-    BotaoTemporizador
-},
+        CronometroTarefa,
+        BotaoTemporizador
+    },
     data() {
         return {
             tempoEmSegundos: 0,
             cronometro: 0,
-            rodando: false 
+            rodando: false
         }
     },
-    
+
     methods: {
         iniciar() {
             // começar a contagem
