@@ -28,8 +28,8 @@ import { defineComponent } from 'vue';
 import TemporizadorTarefa from './TemporizadorTarefa.vue';
 import { computed } from '@vue/reactivity';
 import { useStore } from '@/store';
-import { NOTIFICA } from '@/store/tipo-mutacoes';
 import { TipoNotificacao } from '@/interfaces/INotificacao';
+import { notificaMixin } from '@/mixins/notifica';
 
 export default defineComponent({
     name: 'FormularioTarefa',
@@ -48,11 +48,7 @@ export default defineComponent({
             const projeto = this.projetos.find((p) => p.id == this.idProjeto)
             // Se o projeto não existe:
             if (!projeto) {
-                this.store.commit(NOTIFICA, {
-                    tipo: TipoNotificacao.FALHA,
-                    titulo: 'Erro!',
-                    texto: 'É necessário selecionar um projeto antes de finalizar a tarefa!',
-                });
+                this.notifica(TipoNotificacao.FALHA, 'Erro!', 'É necessário selecionar um projeto antes de finalizar a tarefa!');
                 return; // early return
             }
 
@@ -66,6 +62,7 @@ export default defineComponent({
             this.descricao = "";
         }
     },
+    mixins: [notificaMixin],
     setup() {
         const store = useStore()
         return {
